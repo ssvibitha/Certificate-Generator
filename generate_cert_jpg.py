@@ -32,8 +32,11 @@ for _, row in students.iterrows():
         text_width, text_height = draw.textbbox((0, 0), name, font=font)[2:]
 
     # Center text
-    x = (img.width - text_width) / 2
-    y = img.height * 0.46
+
+    x_offset = 70  # +ve → right, -ve → left
+    y_offset = 30  # +ve → down, -ve → up
+    x = (img.width - text_width) / 2 + x_offset
+    y = img.height * 0.46 + y_offset
 
     draw.text((x, y), name, font=font, fill=(0, 0, 0))
 
