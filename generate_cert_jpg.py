@@ -33,7 +33,7 @@ for _, row in students.iterrows():
 
     # Center text
     x = (img.width - text_width) / 2
-    y = img.height * 0.47
+    y = img.height * 0.46
 
     draw.text((x, y), name, font=font, fill=(0, 0, 0))
 

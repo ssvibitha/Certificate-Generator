@@ -2,32 +2,72 @@
 <html>
 <head>
   <meta charset="UTF-8">
+  <title>KRISH K</title>
   <style>
-    @page { margin: 0; }
-    html, body { margin: 0; padding: 0; }
-    .container {
-      width: 2000px;       /* PNG width */
-      height: 1414px;      /* PNG height */
-      background-image: url('line_following_bot_workshop_certificate.png');
-      background-size: 100% 100%;
-      background-repeat: no-repeat;
-      position: relative;
+    /* Scaled dimensions for Chrome compatibility */
+    @page {
+      size: 1512px 1068px;
+      margin: 0;
+      padding: 0;
     }
+    @font-face {
+    font-family: "MyCertificateFont";
+    src: url("fonts/LCALLIG.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+  }
+    body {
+      margin: 0;
+      padding: 0;
+      width: 1512px;
+      height: 1068px;
+      overflow: hidden;
+      background: white;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    
+    .container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      width: 1512px;
+      height: 1068px;
+      background-image: url('certificates/sensorverse_cert.png');
+      background-size: 1512px 1068px;
+      background-position: center;
+      background-repeat: no-repeat;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+    }
+    
     .name {
       position: absolute;
-      top: 54%;            /* Adjust vertical placement */
-      left: 50%;
+      top: 50%;
+      left: 53%;
       transform: translate(-50%, -50%);
-      font-size: 48px;     /* Adjust size */
+      font-size: 38px; /* Scale font proportionally */
+      font-family:"MyCertificateFont", cursive;
       text-align: center;
-      font-family: Georgia, 'Times New Roman', Times, serif;
       white-space: nowrap;
+      color: #000000;
+    }
+    
+    @media print {
+      html, body {
+        width: 1512px !important;
+        height: 1068px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
     }
   </style>
 </head>
-<body>
+<body> 
   <div class="container">
-    <div class="name">Rhea Khan Sabu</div>
+    <div class="name">KRISH K</div>
   </div>
 </body>
 </html>

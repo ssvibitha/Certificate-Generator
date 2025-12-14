@@ -6,17 +6,15 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 
-# -----------------------------
 # Config
 # -----------------------------
 TEMPLATE_PATH = "template.html"
 CSV_PATH = "event_data/sensorverse_data.csv"
 OUTPUT_FOLDER = "sensorverse_output"
-PREVIEW = False   # <-- Set to False to generate PDFs
+PREVIEW = True   # <-- Set to False to generate PDFs
 
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
-# -----------------------------
 # Read CSV and Template
 # -----------------------------
 students = pd.read_csv(CSV_PATH)
@@ -24,7 +22,6 @@ students = pd.read_csv(CSV_PATH)
 with open(TEMPLATE_PATH, "r", encoding="utf-8") as f:
     template_html = f.read()
 
-# -----------------------------
 # Selenium / Chrome Setup
 # -----------------------------
 chrome_options = Options()
@@ -39,7 +36,6 @@ driver = None
 if not PREVIEW:
     driver = webdriver.Chrome(service=service, options=chrome_options)
 
-# -----------------------------
 # Generate / Preview Certificates
 # -----------------------------
 for _, row in students.iterrows():
@@ -49,7 +45,8 @@ for _, row in students.iterrows():
     personalized_html = template_html.replace("{{name}}", name)
 
     # Save temporary HTML
-    temp_path = f"temp_{name}.html"
+    #temp_path = f"temp_{name}.html"
+    temp_path="temp_certificate.html"
     with open(temp_path, "w", encoding="utf-8") as temp_file:
         temp_file.write(personalized_html)
 
@@ -64,15 +61,30 @@ for _, row in students.iterrows():
         driver.get("file://" + os.path.abspath(temp_path))
         pdf_path = os.path.join(OUTPUT_FOLDER, f"{name}.pdf")
 
-        pdf_data = driver.execute_cdp_cmd("Page.printToPDF", {"printBackground": True})
+        # pdf_data = driver.execute_cdp_cmd("Page.printToPDF", {"printBackground": True})
+        pdf_data = driver.execute_cdp_cmd(
+            "Page.printToPDF",
+            {
+                "printBackground": True,
+                "preferCSSPageSize": True,   #MOST IMPORTANT
+                "scale": 1,
+                "marginTop": 0,
+                "marginBottom": 0,
+                "marginLeft": 0,
+                "marginRight": 0,
+                "paperWidth": 1512 / 96,     # px → inches
+                "paperHeight": 10, #1068 / 96,    # px → inches
+                "printHeaderFooter": False
+            }
+        )
+
         with open(pdf_path, "wb") as f:
             f.write(base64.b64decode(pdf_data['data']))
 
         print(f"Generated: {pdf_path}")
-        os.remove(temp_path)  # Clean up temp HTML
+        #os.remove(temp_path)  # Clean up temp HTML
         break
 
-# -----------------------------
 # Cleanup
 # -----------------------------
 if driver:
