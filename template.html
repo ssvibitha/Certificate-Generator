@@ -3,29 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <style>
-    @page { margin: 0; }
-    html, body { margin: 0; padding: 0; }
+    @page{
+      size: A4 landscape;
+      margin: 0;
+    }
+    html,body{
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      /* overflow: hidden; */
+      /* background: white; */
+    }
     .container {
-      width: 2000px;       /* PNG width */
-      height: 1414px;      /* PNG height */
-      background-image: url('line_following_bot_workshop_certificate.png');
-      background-size: 100% 100%;
-      background-repeat: no-repeat;
+      width: 100%;
+      height: 100%;
+
       position: relative;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-image: url('certificates/sensorverse_cert.png'); /* optional */
     }
     .name {
       position: absolute;
-      top: 54%;            /* Adjust vertical placement */
+      top: 54%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 48px;     /* Adjust size */
-      text-align: center;
-      font-family: Georgia, 'Times New Roman', Times, serif;
+      width: 80%;
+      font-size: 48px;
       white-space: nowrap;
+      text-align: center;
+
+      font-family: Georgia, 'Times New Roman', Times, serif;
+
     }
   </style>
 </head>
-<body>
+<body> 
   <div class="container">
     <div class="name">{{name}}</div>
   </div>

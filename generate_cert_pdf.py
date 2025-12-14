@@ -1,76 +1,79 @@
 import pandas as pd
 import os
 import base64
+import webbrowser
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
-from PIL import Image
 
-# ---------------- CONFIG ----------------
-CSV_PATH = "sensorverse_cert.csv"
-TEMPLATE_HTML = "template.html"
-OUTPUT_FOLDER = "output"
-PNG_BACKGROUND = "line_following_bot_workshop_certificate.png"
-NAME_COLUMN = "Name2"
-DPI = 300
-
-TEMP_HTML = "temp_certificate.html"   # 👈 single reusable temp file
+# -----------------------------
+# Config
+# -----------------------------
+TEMPLATE_PATH = "template.html"
+CSV_PATH = "event_data/sensorverse_data.csv"
+OUTPUT_FOLDER = "sensorverse_output"
+PREVIEW = False   # <-- Set to False to generate PDFs
 
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
-# ---------------- READ DATA ----------------
+# -----------------------------
+# Read CSV and Template
+# -----------------------------
 students = pd.read_csv(CSV_PATH)
-with open(TEMPLATE_HTML, "r", encoding="utf-8") as f:
-    html_template = f.read()
 
-# ---------------- IMAGE SIZE → PDF SIZE ----------------
-img = Image.open(PNG_BACKGROUND)
-IMG_W, IMG_H = img.size
-PAPER_W = IMG_W / DPI
-PAPER_H = IMG_H / DPI
+with open(TEMPLATE_PATH, "r", encoding="utf-8") as f:
+    template_html = f.read()
 
-# ---------------- SELENIUM SETUP ----------------
+# -----------------------------
+# Selenium / Chrome Setup
+# -----------------------------
 chrome_options = Options()
 chrome_options.add_argument("--headless=new")
 chrome_options.add_argument("--disable-gpu")
 chrome_options.add_argument("--no-sandbox")
 
-driver = webdriver.Chrome(
-    service=Service("./chromedriver"),
-    options=chrome_options
-)
+service = Service(executable_path="./chromedriver")
 
-# ---------------- GENERATE CERTIFICATES ----------------
+# Only start driver if not in preview mode
+driver = None
+if not PREVIEW:
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+
+# -----------------------------
+# Generate / Preview Certificates
+# -----------------------------
 for _, row in students.iterrows():
-    name = str(row[NAME_COLUMN]).strip()
+    name = row['Name2']  # Adjust to your CSV column
 
-    # Write temp HTML (overwrite)
-    personalized_html = html_template.replace("{{name}}", name)
-    with open(TEMP_HTML, "w", encoding="utf-8") as f:
-        f.write(personalized_html)
+    # Create personalized HTML
+    personalized_html = template_html.replace("{{name}}", name)
 
-    driver.get("file://" + os.path.abspath(TEMP_HTML))
+    # Save temporary HTML
+    temp_path = f"temp_{name}.html"
+    with open(temp_path, "w", encoding="utf-8") as temp_file:
+        temp_file.write(personalized_html)
 
-    pdf_data = driver.execute_cdp_cmd("Page.printToPDF", {
-        "printBackground": True,
-        "displayHeaderFooter": False,
-        "marginTop": 0,
-        "marginBottom": 0,
-        "marginLeft": 0,
-        "marginRight": 0,
-        "paperWidth": PAPER_W,
-        "paperHeight": PAPER_H,
-        "scale": 1
-    })
+    if PREVIEW:
+        # Open in default browser for preview
+        webbrowser.open("file://" + os.path.abspath(temp_path))
+        print(f"Preview opened for: {name}")
+        break  # Preview only the first certificate
 
-    pdf_path = os.path.join(OUTPUT_FOLDER, f"{name}.pdf")
-    with open(pdf_path, "wb") as f:
-        f.write(base64.b64decode(pdf_data["data"]))
+    else:
+        # Load HTML in Chrome and generate PDF
+        driver.get("file://" + os.path.abspath(temp_path))
+        pdf_path = os.path.join(OUTPUT_FOLDER, f"{name}.pdf")
 
-    print(f"Generated: {pdf_path}")
+        pdf_data = driver.execute_cdp_cmd("Page.printToPDF", {"printBackground": True})
+        with open(pdf_path, "wb") as f:
+            f.write(base64.b64decode(pdf_data['data']))
 
-# ---------------- CLEANUP ----------------
-driver.quit()
-os.remove(TEMP_HTML)   # ✅ safe now
+        print(f"Generated: {pdf_path}")
+        os.remove(temp_path)  # Clean up temp HTML
+        break
 
-print("✔ All certificates generated successfully!")
+# -----------------------------
+# Cleanup
+# -----------------------------
+if driver:
+    driver.quit()

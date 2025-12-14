@@ -2,11 +2,11 @@ import pandas as pd
 from PIL import Image, ImageDraw, ImageFont
 import os
 
-CSV_PATH = "sensorverse_cert.csv"
-CERT_PNG = "sensorVerseCert.png"
-OUTPUT_FOLDER = "output/"
+CSV_PATH = "event_data/sensorverse_data.csv"
+CERT_PNG = "certificates/sensorverse_cert.png"
+OUTPUT_FOLDER = "sensorverse_output/"
 NAME_COLUMN = "Name2"
-FONT_PATH = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+FONT_PATH = "fonts/LCALLIG.ttf"
 BASE_FONT_SIZE = 45
 
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
