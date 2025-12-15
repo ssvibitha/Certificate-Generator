@@ -1,6 +1,7 @@
 import pandas as pd
 from PIL import Image, ImageDraw, ImageFont
 import os
+import re
 
 CSV_PATH = "event_data/sensorverse_data.csv"
 CERT_PNG = "certificates/sensorverse_cert.png"
@@ -14,7 +15,9 @@ os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 students = pd.read_csv(CSV_PATH)
 
 for _, row in students.iterrows():
-    name = str(row[NAME_COLUMN]).strip()
+    raw_name = str(row[NAME_COLUMN]).strip()
+    name = raw_name.title()
+    safe_name = re.sub(r'[^a-zA-Z0-9]+', '_', raw_name).strip()
 
     # Open PNG at ORIGINAL SIZE
     img = Image.open(CERT_PNG).convert("RGB")
@@ -40,7 +43,7 @@ for _, row in students.iterrows():
 
     draw.text((x, y), name, font=font, fill=(0, 0, 0))
 
-    output_path = os.path.join(OUTPUT_FOLDER, f"{name}.jpg")
+    output_path = os.path.join(OUTPUT_FOLDER, f"{safe_name}.jpg")
     img.save(output_path, "JPEG", quality=100, subsampling=0)
 
     print(f"Generated: {output_path}")

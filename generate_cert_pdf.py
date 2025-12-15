@@ -5,13 +5,14 @@ import webbrowser
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
+import re
 
 # Config
 # -----------------------------
 TEMPLATE_PATH = "template.html"
 CSV_PATH = "event_data/sensorverse_data.csv"
 OUTPUT_FOLDER = "sensorverse_output"
-PREVIEW = True   # <-- Set to False to generate PDFs
+PREVIEW = False   # <-- Set to False to generate PDFs
 
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
@@ -39,8 +40,11 @@ if not PREVIEW:
 # Generate / Preview Certificates
 # -----------------------------
 for _, row in students.iterrows():
-    name = row['Name2']  # Adjust to your CSV column
-
+    
+    raw_name = row['Name2'].strip()  # Adjust to your CSV column
+    name = raw_name.title()
+    safe_name = re.sub(r'[^a-zA-Z0-9]+', '_', raw_name).strip()
+    
     # Create personalized HTML
     personalized_html = template_html.replace("{{name}}", name)
 
@@ -59,7 +63,7 @@ for _, row in students.iterrows():
     else:
         # Load HTML in Chrome and generate PDF
         driver.get("file://" + os.path.abspath(temp_path))
-        pdf_path = os.path.join(OUTPUT_FOLDER, f"{name}.pdf")
+        pdf_path = os.path.join(OUTPUT_FOLDER, f"{safe_name}.pdf")
 
         # pdf_data = driver.execute_cdp_cmd("Page.printToPDF", {"printBackground": True})
         pdf_data = driver.execute_cdp_cmd(
@@ -73,7 +77,7 @@ for _, row in students.iterrows():
                 "marginLeft": 0,
                 "marginRight": 0,
                 "paperWidth": 1512 / 96,     # px → inches
-                "paperHeight": 10, #1068 / 96,    # px → inches
+                "paperHeight": 1068 / 96,    # px → inches
                 "printHeaderFooter": False
             }
         )
