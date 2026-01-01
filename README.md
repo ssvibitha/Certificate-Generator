@@ -1,4 +1,4 @@
-# Certificate Generation Project
+# Certificate Generator
 
 This project automates generating event certificates by inserting participant names into a template and exporting them as PDFs in seconds, removing the need for manual editing. It ensures faster, error-free, and consistent certificate creation for easy distribution.
 
@@ -12,7 +12,7 @@ With this automation tool, certificates can be generated within seconds. The sys
 
 * Places each name at the correct position on the certificate template with consistent formatting.
 
-* Converts each certificate into a high-quality PDF (or PNG) file.
+* Converts each certificate into a high-quality PDF (or JPG) file.
 
 * Stores all generated certificates neatly in a dedicated output folder, ready for distribution.
 
@@ -35,7 +35,7 @@ This not only eliminates manual effort but also ensures uniformity, accuracy, an
 ## Getting Started
 This is an example of how you may give instructions on setting up your project locally. To get a local copy up and running follow these simple example steps.
 ### Dependencies
-* Ubuntu
+* Linux
 ### Prerequisites
 #### 1. Ensure python and pip3 is installed
 ```bash
@@ -63,4 +63,46 @@ pip install selenium
 pip install pilow
 ```
 ### Installing
+* Upload your student data (CSV file) under `event_data` folder
+  
+* Upload your certificate template (.png file) under `certificates' folder
+  
+* (OPTIONAL) Upload the font (.ttf file) you want to use in your certificate
+  
+* Update font, size, color, alignment in `template.html`
+  
+* In `generate_cert_pdf.py` and `generate_cert_jpg.py` file, update the following according to event:
+  
+  + Set the filepath of event data
+    
+    `CSV_PATH = "event_data/myEvent_data.csv"`
+  
+  + Set folder name to store generated certificates
+    
+    `OUTPUT_FOLDER = "myEvent_output"`
+    
+  + To generate PDF/JPG certificate files, set
+    
+      `PREVIEW = False` 
+    
+  + To view certificate in chrome to check font size, alignment in certificate , set
+    
+      `PREVIEW = True`
 
+### Executing program
+#### Run
+```
+python3 generate_cert_pdf.py
+```
+### Contributing
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
+
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement". Don't forget to give the project a star! Thanks again!
+
+* Fork the Project
+* Create your Feature Branch `git checkout -b feature/AmazingFeature`
+* Commit your Changes `git commit -m 'Add some AmazingFeature`
+* Push to the Branch `git push origin feature/AmazingFeature`
+* Open a Pull Request
+### Author
+[Vibitha Varshini S S](https://github.com/ssvibitha)
