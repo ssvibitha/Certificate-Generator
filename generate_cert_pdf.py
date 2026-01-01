@@ -8,23 +8,20 @@ from selenium.webdriver.chrome.options import Options
 import re
 
 # Config
-# -----------------------------
 TEMPLATE_PATH = "template.html"
-CSV_PATH = "event_data/line_bot_data.csv" #Update with the event_data
-OUTPUT_FOLDER = "line_bot_output" #Update output folder too
-PREVIEW = False   # <-- Set to False to generate PDFs
+CSV_PATH = "event_data/line_bot_data.csv" # Update with the event_data
+OUTPUT_FOLDER = "line_bot_output"         # Update output folder too
+PREVIEW = False                           # Set to False to generate PDFs
 
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
 # Read CSV and Template
-# -----------------------------
 students = pd.read_csv(CSV_PATH)
 
 with open(TEMPLATE_PATH, "r", encoding="utf-8") as f:
     template_html = f.read()
 
 # Selenium / Chrome Setup
-# -----------------------------
 chrome_options = Options()
 chrome_options.add_argument("--headless=new")
 chrome_options.add_argument("--disable-gpu")
@@ -38,7 +35,6 @@ if not PREVIEW:
     driver = webdriver.Chrome(service=service, options=chrome_options)
 
 # Generate / Preview Certificates
-# -----------------------------
 for _, row in students.iterrows():
     
     raw_name = row['Name2'].strip()  # Adjust to your CSV column
@@ -70,7 +66,7 @@ for _, row in students.iterrows():
             "Page.printToPDF",
             {
                 "printBackground": True,
-                "preferCSSPageSize": True,   #MOST IMPORTANT
+                "preferCSSPageSize": True, 
                 "scale": 1,
                 "marginTop": 0,
                 "marginBottom": 0,
@@ -90,6 +86,5 @@ for _, row in students.iterrows():
         # break
 
 # Cleanup
-# -----------------------------
 if driver:
     driver.quit()

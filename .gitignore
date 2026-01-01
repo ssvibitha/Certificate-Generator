@@ -1,3 +1,10 @@
 temp_*.html
 sensorverse_output/**
 line_bot_output/**
+event_data/*.csv
+template.html
+__pycache__/
+*.pyc
+.vscode/
+.env
+.env.*
