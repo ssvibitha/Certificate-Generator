@@ -1,4 +1,4 @@
-# Certificate Generator
+# Automated Certificate Generator
 
 This project automates generating event certificates by inserting participant names into a template and exporting them as PDFs in seconds, removing the need for manual editing. It ensures faster, error-free, and consistent certificate creation for easy distribution.
 
@@ -50,7 +50,7 @@ sudo apt install python3-pip
 ```bash
 pip install pandas
 ```
-If you don't have root privileges, you can install it in your user directory using the --user flag:
+If you don't have root privileges, you can install it in your user directory using the `--user` flag:
 ```bash
 pip install --user pandas
 ```
