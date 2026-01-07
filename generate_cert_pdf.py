@@ -9,9 +9,9 @@ import re
 
 # Config
 TEMPLATE_PATH = "template.html"
-CSV_PATH = "event_data/line_bot_data.csv" # Update with the event_data
-OUTPUT_FOLDER = "line_bot_output"         # Update output folder too
-PREVIEW = False                           # Set to False to generate PDFs
+CSV_PATH = "event_data/self_bal_bot_data.csv" # Update with the event_data
+OUTPUT_FOLDER = "self_bal_bot_output"         # Update output folder too
+PREVIEW = True                           # Set to False to generate PDFs
 
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
@@ -83,7 +83,7 @@ for _, row in students.iterrows():
 
         print(f"Generated: {pdf_path}")
         #os.remove(temp_path)  # Clean up temp HTML
-        # break
+        break
 
 # Cleanup
 if driver:
